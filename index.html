@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fórmula General - PEÑA NAVA ALAN ABRAHAM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 580px;
+      margin: 40px auto;
+      background: #f0f2f5;
+      color: #333;
+      padding: 0 1rem;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      color: #2980b9;
+      font-size: 1rem;
+      border-bottom: 2px solid #2980b9;
+      padding-bottom: 4px;
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    /* Fórmula visual */
+    .formula {
+      text-align: center;
+      font-size: 1.1rem;
+      background: #eef4fb;
+      border: 1px solid #c5d9f0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 6px;
+      color: #1a5e8a;
+      letter-spacing: 0.03em;
+    }
+
+    .formula sub { font-size: 0.7em; }
+
+    /* Inputs */
+    .input-group {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .field input[type="number"] {
+      width: 100px;
+      padding: 8px 10px;
+      border: 2px solid #bdc3c7;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus {
+      border-color: #2980b9;
+      outline: none;
+    }
+
+    /* Botón calcular */
+    #btn-calcular {
+      width: 100%;
+      padding: 10px;
+      background: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    #btn-calcular:hover  { background: #1a6fa0; }
+    #btn-calcular:active { transform: scale(0.98); }
+
+    /* Resultados */
+    .resultado-box {
+      display: none;
+    }
+
+    .resultado-box.visible {
+      display: block;
+    }
+
+    .res-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .res-item:last-child {
+      border-bottom: none;
+    }
+
+    .res-label {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #2c3e50;
+      min-width: 30px;
+    }
+
+    .res-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #27ae60;
+    }
+
+    .res-value.x2 {
+      color: #2980b9;
+    }
+
+    /* Discriminante */
+    .discriminante {
+      font-size: 0.82rem;
+      color: #7f8c8d;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #ddd;
+    }
+
+    /* Error */
+    .error-msg {
+      color: #e74c3c;
+      font-weight: bold;
+      font-size: 0.95rem;
+      padding: 10px 0;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📐 Fórmula General (Cuadrática)</h1>
+  <p class="subtitle">Peña Nava Alan Abraham · Ing. en Sistemas Computacionales · Los Mochis, Sinaloa</p>
+
+  <!-- Fórmula visual -->
+  <div class="card">
+    <h2>Fórmula</h2>
+    <div class="formula">
+      x = ( −b ± √( b² − 4ac ) ) / 2a
+    </div>
+    <p style="font-size:0.8rem; color:#95a5a6; text-align:center; margin-top:6px;">
+      Para ecuaciones de la forma: ax² + bx + c = 0
+    </p>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card">
+    <h2>Ingresa los coeficientes</h2>
+    <div class="input-group">
+      <div class="field">
+        <label for="inputA">Coeficiente a</label>
+        <input type="number" id="inputA" placeholder="ej. 1" step="any" />
+      </div>
+      <div class="field">
+        <label for="inputB">Coeficiente b</label>
+        <input type="number" id="inputB" placeholder="ej. -3" step="any" />
+      </div>
+      <div class="field">
+        <label for="inputC">Coeficiente c</label>
+        <input type="number" id="inputC" placeholder="ej. 2" step="any" />
+      </div>
+    </div>
+    <button id="btn-calcular">Calcular x₁ y x₂</button>
+  </div>
+
+  <!-- Resultados -->
+  <div class="card resultado-box" id="resultado-box">
+    <h2>Resultados</h2>
+    <div id="resultado-contenido"></div>
+  </div>
+
+  <script>
+    document.getElementById("btn-calcular").addEventListener("click", function () {
+      var a = parseFloat(document.getElementById("inputA").value);
+      var b = parseFloat(document.getElementById("inputB").value);
+      var c = parseFloat(document.getElementById("inputC").value);
+
+      var box       = document.getElementById("resultado-box");
+      var contenido = document.getElementById("resultado-contenido");
+
+      // Validación de campos
+      if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        box.classList.add("visible");
+        contenido.innerHTML = '<p class="error-msg">⚠️ Por favor ingresa valores numéricos en los tres campos.</p>';
+        return;
+      }
+
+      // Validación: a no puede ser 0 (no sería cuadrática)
+      if (a === 0) {
+        box.classList.add("visible");
+        contenido.innerHTML = '<p class="error-msg">⚠️ El coeficiente <strong>a</strong> no puede ser 0 (no sería una ecuación cuadrática).</p>';
+        return;
+      }
+
+      // Discriminante
+      var discriminante = (b * b) - (4 * a * c);
+
+      box.classList.add("visible");
+
+      if (discriminante > 0) {
+        // Dos raíces reales distintas
+        var x1 = (-b + Math.sqrt(discriminante)) / (2 * a);
+        var x2 = (-b - Math.sqrt(discriminante)) / (2 * a);
+
+        contenido.innerHTML =
+          '<div class="res-item">' +
+            '<span class="res-label">x₁ =</span>' +
+            '<span class="res-value">' + redondear(x1) + '</span>' +
+          '</div>' +
+          '<div class="res-item">' +
+            '<span class="res-label">x₂ =</span>' +
+            '<span class="res-value x2">' + redondear(x2) + '</span>' +
+          '</div>' +
+          '<p class="discriminante">Discriminante (b²−4ac) = ' + redondear(discriminante) + ' → Dos raíces reales distintas.</p>';
+
+      } else if (discriminante === 0) {
+        // Una raíz real doble
+        var x = -b / (2 * a);
+
+        contenido.innerHTML =
+          '<div class="res-item">' +
+            '<span class="res-label">x₁ = x₂ =</span>' +
+            '<span class="res-value">' + redondear(x) + '</span>' +
+          '</div>' +
+          '<p class="discriminante">Discriminante (b²−4ac) = 0 → Una raíz real doble.</p>';
+
+      } else {
+        // Raíces complejas
+        var parteReal      = -b / (2 * a);
+        var parteImaginaria = Math.sqrt(-discriminante) / (2 * a);
+
+        contenido.innerHTML =
+          '<div class="res-item">' +
+            '<span class="res-label">x₁ =</span>' +
+            '<span class="res-value">' + redondear(parteReal) + ' + ' + redondear(parteImaginaria) + 'i</span>' +
+          '</div>' +
+          '<div class="res-item">' +
+            '<span class="res-label">x₂ =</span>' +
+            '<span class="res-value x2">' + redondear(parteReal) + ' − ' + redondear(parteImaginaria) + 'i</span>' +
+          '</div>' +
+          '<p class="discriminante">Discriminante (b²−4ac) = ' + redondear(discriminante) + ' → Raíces complejas (no reales).</p>';
+      }
+    });
+
+    // Redondea a 4 decimales si es necesario
+    function redondear(n) {
+      return Number.isInteger(n) ? n : parseFloat(n.toFixed(4));
+    }
+  </script>
+
+</body>
+</html>
